@@ -18,10 +18,10 @@ services:
   mysql:
     image: mysql:8
     environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=n8n
-      - MYSQL_USER=n8n
-      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD={MYSQL_PASSWORD}
     networks:
       - n8n
   redis:

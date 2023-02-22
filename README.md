@@ -11,3 +11,9 @@ cp .env.example .env
 ```
 make install
 ```
+
+. Acesse o n8n em seu navegador com o link
+
+```
+http://localhost:5678/
+```
