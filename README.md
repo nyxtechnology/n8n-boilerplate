@@ -9,7 +9,7 @@ cp .env.example .env
 . Mude as variáveis no .env conforme o projeto
 
 ```
-make install
+make up
 ```
 
 . Acesse o n8n em seu navegador com o link
