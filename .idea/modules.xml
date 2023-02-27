@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/nyx-aut.iml" filepath="$PROJECT_DIR$/.idea/nyx-aut.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../xingu-plataform/.idea/xingu-plataform.iml" filepath="$PROJECT_DIR$/../xingu-plataform/.idea/xingu-plataform.iml" />
     </modules>
   </component>
 </project>

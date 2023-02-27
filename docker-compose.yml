@@ -1,36 +1,61 @@
-version: '3.7'
+version: '3.8'
+
+volumes:
+  db_storage:
+    name: db_storage
+  n8n_storage:
+    name: n8n_storage
+
+networks:
+  n8n_postgres_network:
+    name: n8n_postgres_network
 
 services:
+  n8n_postgres:
+    image: postgres:11
+    container_name: postgres-n8n
+    restart: always
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_NON_ROOT_USER
+      - POSTGRES_NON_ROOT_PASSWORD
+    networks:
+      - n8n_postgres_network
+    volumes:
+      - db_storage:/var/lib/postgresql/data
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   n8n:
-    image: n8nio/n8n:latest
-    command: /bin/sh -c "n8n start --tunnel"
+    image: n8nio/n8n
+    container_name: n8n-service
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=n8n_postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER
+      - N8N_BASIC_AUTH_PASSWORD
+    networks:
+      - n8n_postgres_network
     ports:
       - 5678:5678
-    environment:
-      - N8N_QUEUE_TYPE=redis
-      - N8N_QUEUE_HOST=redis
-      - N8N_QUEUE_PORT=6379
-      - N8N_QUEUE_NAME=n8n
-    networks:
-      - n8n
+    links:
+      - n8n_postgres
+    volumes:
+      - n8n_storage:/home/node/.n8n
+      - .n8n-local-files:/files
+    command: /bin/sh -c "n8n start --tunnel"
     depends_on:
-      - mysql
-      - redis
-
-  mysql:
-    image: mysql:8
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=n8n
-      - MYSQL_USER=n8n
-      - MYSQL_PASSWORD=password
-    networks:
-      - n8n
-
-  redis:
-    image: redis:latest
-    networks:
-      - n8n
-networks:
-  n8n:
-    driver: bridge
+      n8n_postgres:
+        condition: service_healthy
