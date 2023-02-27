@@ -1,6 +1,4 @@
-# n8n com PostgreSQL
-
-Inicia n8n com PostgreSQL como banco de dados.
+# nyx - n8n
 
 ## Instalar localmente
 
@@ -12,4 +10,10 @@ cp .env.example .env
 
 ```
 make up
+```
+
+. Acesse o n8n em seu navegador com o link
+
+```
+http://localhost:5678/
 ```
