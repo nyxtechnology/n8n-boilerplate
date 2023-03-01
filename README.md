@@ -21,8 +21,8 @@ cp .env.example .env
 make up
 ```
 
-. Acesse o n8n em seu navegador com o link
+. Acesse o n8n em seu navegador com o link 
 
 ```
-n8n.example.local/
+http://n8n.example.local/
 ```
